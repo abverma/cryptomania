@@ -77,6 +77,6 @@ var server = http.createServer((req, res) => {
 	}
 });
 
-server.listen(PORT, HOST);
+server.listen(PORT);
 
-console.log(`Listening at ${HOST}:${PORT} ....`);
+console.log(`Listening at port ${PORT} ....`);
