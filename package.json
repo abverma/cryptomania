@@ -2,7 +2,7 @@
   "name": "cryptomania",
   "version": "1.0.0",
   "description": "Get your total crypto value",
-  "main": "app.js",
+  "main": "server.js",
   "dependencies": {
     "q": "^1.5.1",
     "request": "^2.85.0"
