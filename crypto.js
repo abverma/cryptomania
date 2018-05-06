@@ -2,7 +2,7 @@ const request = require('request');
 const Q = require('q');
 
 const BTC_HOLDING = .27;
-const XTP_HOLDING = 2333;
+const XRP_HOLDING = 2333;
 const LTC_HOLDING = 1.4;
 
 const ask = (question) => {
@@ -57,7 +57,7 @@ const fetchAndCalculate = (bittrex_value, binance_value) => {
 				console.log('BTC: ',btc_inr);
 				console.log('XRP: ', xrp_inr);
 				console.log('LTC: ', ltc_inr);		
-				var value = btc_inr * (bittrex_value + binance_value + BTC_HOLDING) + (xrp_inr * BTC_HOLDING) + (ltc_inr * BTC_HOLDING);
+				var value = btc_inr * (bittrex_value + binance_value + BTC_HOLDING) + (xrp_inr * XRP_HOLDING) + (ltc_inr * LTC_HOLDING);
 				var end_time = new Date().getTime();
 				console.log('Time taken: ', (end_time - start_time)/1000);
 				resolve({
