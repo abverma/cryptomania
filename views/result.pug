@@ -2,8 +2,9 @@ doctype html
 html(lang='en')
 	include head.pug
 	body
-		h1(class="mx-2 p-2 text-center text-md-left") Cryptomania
+		include heading.pug
 		div(class="row")
 			div(class="m-4 p-4 border rounded bg-light col col-md-3")
-				p Total Value: Rs.#{result.total_value} <br>
-				p BTC@ #{result.btc_rate}  LTC@ #{result.ltc_rate} XRP@ #{result.xrp_rate}
+				p(class="text-center") Total Value: Rs.#{result.total_value} <br>
+				p(class="text-center") BTC@ #{result.btc_rate}  LTC@ #{result.ltc_rate} XRP@ #{result.xrp_rate}
+		include footer.pug

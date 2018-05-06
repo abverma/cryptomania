@@ -2,16 +2,17 @@ doctype html
 html(lang='en')
 	include head.pug
 	body
-		h1(class="mx-4 text-center text-md-left") Cryptomania
+		include heading.pug
 		div(class="row")
 			div(class="m-4 p-2 border rounded bg-light col col-md-3" )
 				form(action="/fetchValue" method="GET")
-					div(class="form-group p-3")
-						label(for="bittrex") Enter Bittrex BTC value:
+					div(class="form-group px-3")
+						label(for="bittrex") Bittrex BTC value:
 						input(type="text" class="form-control" id="bittrex" name="bittrex")
 
-					div(class="form-group p-3")
-						label(for="binance") Enter Binance BTC value:
+					div(class="form-group px-3")
+						label(for="binance") Binance BTC value:
 						input(type="text" class="form-control" id="binance" name="binance")
 					
 					input(type="submit" class="btn btn-primary mx-3" value="Go")
+		include footer.pug
