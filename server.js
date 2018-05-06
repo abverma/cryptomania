@@ -1,10 +1,11 @@
-const http = require('http');
+const express = require('express');
+const app = express();
 const crypto = require('./crypto');
 const url = require('url');
-const fs = require('fs');
+
 const PORT = process.env.PORT || 5000;
-const HOST = 'localhost';
-	  
+
+app.set('view engine', 'pug');
 
 var getQueryParams = (url_parts) => {
 	var queryObj = {};
@@ -30,62 +31,32 @@ var send404 = (res) => {
 	res.end('<html><body><h2>Page not found<h2></body></html>');
 }
 
-var server = http.createServer((req, res) => {
+app.get('/', function (req, res) {
+  res.render('index', { title: 'Hey', message: 'Hello there!' })
+})
 
-	var url_parts = url.parse(req.url);
-	console.log(req.method, url_parts.pathname);
+app.get('/fetchValue', function(req, res) {
+	console.log(req.query);
+	//var queryObj = getQueryParams(req.query);
+	//console.log(queryObj);
 
-	if (url_parts.pathname === '/') {
-		fs.readFile('./crypto.html', (err, data) => {
-			if (err) {
-				send404(res);
-			}
-			else {
-				res.end(data);
-			}
+	var queryObj = req.query;
+	var bittrex_value = queryObj.bittrex;
+	var binance_value = queryObj.binance;
+
+	crypto.fetchAndCalculate(bittrex_value, binance_value)
+		.then((result) => {
+			console.log('Total: ', result.total_value);
+  			res.render('result', {result: result});
+		})
+		.catch((err) => {
+			console.log(err);
+  			res.writeHead(500, { 'Content-Type': 'html/plain' });
+			res.write(err);
+			res.end();
 		});
-	}
-	else if (url_parts.pathname === '/fetchValue') {
-		var queryObj = getQueryParams(url_parts);
-		console.log(queryObj);
+})
 
-		var bittrex_value = queryObj.bittrex;
-		var binance_value = queryObj.binance;
-
-		crypto.fetchAndCalculate(bittrex_value, binance_value)
-			.then((result) => {
-				console.log('Total: ', result.total_value);
-	  			res.writeHead(200, { 'Content-Type': 'html' });
-	  			// var data = {
-	  			// 	data: {
-	  			// 		total: value.toFixed(2)
-	  			// 	}
-	  			// }
-	  			var data = '<html>' + 
-		  						'<head>' + 
-		  							'<title>Cryptomania</title>' +
-		  						'</head>' + 
-		  						'<body>' +
-		  							'<h1>Cryptomania</h1>' + 
-		  							'Total Value: Rs.' + result.total_value + '<br>' +
-		  							'(BTC@' + result.btc_rate + ' LTC@' + result.ltc_rate + ' XRP@' + result.xrp_rate + ')' +
-		  						'</body>' +
-		  					'</html>'
-				res.write(data);
-				res.end();
-			})
-			.catch((err) => {
-				console.log(err);
-	  			res.writeHead(500, { 'Content-Type': 'html/plain' });
-				res.write(err);
-				res.end();
-			});
-	}
-	else {
-		send404(res);
-	}
-});
-
-server.listen(PORT);
-
-console.log(`Listening at port ${PORT} ....`);
+app.listen(PORT, () => {
+	console.log(`Server running on port ${PORT}`);
+})

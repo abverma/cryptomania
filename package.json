@@ -4,6 +4,8 @@
   "description": "Get your total crypto value",
   "main": "server.js",
   "dependencies": {
+    "express": "^4.16.3",
+    "pug": "^2.0.3",
     "q": "^1.5.1",
     "request": "^2.85.0"
   },

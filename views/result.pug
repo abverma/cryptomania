@@ -1,0 +1,8 @@
+doctype html
+html(lang='en')
+	include head.pug
+	body
+		h1(class="mx-auto" style="width: 97%;") Cryptomania
+		div(class="m-4 p-4 border rounded bg-light" style="width: 25%")
+			p Total Value: Rs.#{result.total_value} <br>
+			p BTC@ #{result.btc_rate}  LTC@ #{result.ltc_rate} XRP@ #{result.xrp_rate}
