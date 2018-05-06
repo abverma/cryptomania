@@ -1,6 +1,10 @@
 const request = require('request');
 const Q = require('q');
 
+const BTC_HOLDING = .27;
+const XTP_HOLDING = 2333;
+const LTC_HOLDING = 1.4;
+
 const ask = (question) => {
 	return new Promise((resolve, reject) => {
 		var stdin = process.stdin, stdout = process.stdout;
@@ -36,8 +40,9 @@ const fetchAndCalculate = (bittrex_value, binance_value) => {
 
 		console.log('Fetching rates in rupees ....');
 
-		bittrex_value = parseFloat(bittrex_value);
-		binance_value = parseFloat(binance_value);
+		bittrex_value = bittrex_value ? parseFloat(bittrex_value) : 0;
+		binance_value = binance_value ? parseFloat(binance_value) : 0;
+
 		request(options, (err, res, data) => {
 			if (err) {
 				console.log(err);
@@ -52,10 +57,15 @@ const fetchAndCalculate = (bittrex_value, binance_value) => {
 				console.log('BTC: ',btc_inr);
 				console.log('XRP: ', xrp_inr);
 				console.log('LTC: ', ltc_inr);		
-				var value = btc_inr * (bittrex_value + binance_value + .27) + (xrp_inr * 2333) + (ltc_inr * 1.4);
+				var value = btc_inr * (bittrex_value + binance_value + BTC_HOLDING) + (xrp_inr * BTC_HOLDING) + (ltc_inr * BTC_HOLDING);
 				var end_time = new Date().getTime();
 				console.log('Time taken: ', (end_time - start_time)/1000);
-				resolve(value);
+				resolve({
+					total_value: value.toFixed(2),
+					btc_rate: btc_inr,
+					ltc_rate: ltc_inr,
+					xrp_rate: xrp_inr
+				});
 			}
 		});
 	})

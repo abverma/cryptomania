@@ -53,15 +53,24 @@ var server = http.createServer((req, res) => {
 		var binance_value = queryObj.binance;
 
 		crypto.fetchAndCalculate(bittrex_value, binance_value)
-			.then((value) => {
-				console.log('Total: ', value.toFixed(2));
+			.then((result) => {
+				console.log('Total: ', result.total_value);
 	  			res.writeHead(200, { 'Content-Type': 'html' });
 	  			// var data = {
 	  			// 	data: {
 	  			// 		total: value.toFixed(2)
 	  			// 	}
 	  			// }
-	  			var data = '<html><head><title>Cryptomania</title></head><body><h1>Cryptomania</h1>Total Value: Rs.' + value.toFixed(2).toString() + '</body></html>'
+	  			var data = '<html>' + 
+		  						'<head>' + 
+		  							'<title>Cryptomania</title>' +
+		  						'</head>' + 
+		  						'<body>' +
+		  							'<h1>Cryptomania</h1>' + 
+		  							'Total Value: Rs.' + result.total_value + '<br>' +
+		  							'(BTC@' + result.btc_rate + ' LTC@' + result.ltc_rate + ' XRP@' + result.xrp_rate + ')' +
+		  						'</body>' +
+		  					'</html>'
 				res.write(data);
 				res.end();
 			})
