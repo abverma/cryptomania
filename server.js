@@ -2,9 +2,9 @@ const http = require('http');
 const crypto = require('./crypto');
 const url = require('url');
 const fs = require('fs');
-
-const host = 'localhost',
-	  port = 3000;
+const PORT = process.env.PORT || 5000;
+const HOST = 'localhost';
+	  
 
 var getQueryParams = (url_parts) => {
 	var queryObj = {};
@@ -77,6 +77,6 @@ var server = http.createServer((req, res) => {
 	}
 });
 
-server.listen(port, host);
+server.listen(PORT, HOST);
 
-console.log(`Listening at ${host}:${port} ....`);
+console.log(`Listening at ${HOST}:${PORT} ....`);
