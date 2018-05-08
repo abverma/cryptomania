@@ -59,7 +59,7 @@ app.get('/fetchValue', function(req, res) {
 		});
 });
 
-app.get('/fetchKoinexRates', (req, res) => {
+app.get('/koinexRates', (req, res) => {
 	crypto.fetchKoinexRates()
 		.then((data) => {
 			//res.send(data.prices.inr);
