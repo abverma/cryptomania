@@ -33,7 +33,7 @@ var send404 = (res) => {
 
 app.get('/', function (req, res) {
   res.render('index', { title: 'Hey', message: 'Hello there!' })
-})
+});
 
 app.get('/fetchValue', function(req, res) {
 	console.log(req.query);
@@ -44,19 +44,35 @@ app.get('/fetchValue', function(req, res) {
 	var bittrex_value = queryObj.bittrex;
 	var binance_value = queryObj.binance;
 
-	crypto.fetchAndCalculate(bittrex_value, binance_value)
+	crypto.calculateHoldingValue(bittrex_value, binance_value)
 		.then((result) => {
 			console.log('Total: ', result.total_value);
   			res.render('result', {result: result});
 		})
 		.catch((err) => {
+			console.log('Error fetching holding value.');
 			console.log(err);
-  			res.writeHead(500, { 'Content-Type': 'html/plain' });
-			res.write(err);
-			res.end();
+  			//res.writeHead(500, { 'Content-Type': 'html/plain' });
+			//res.write(err);
+			res.statusCode = 500;
+			res.send();
 		});
+});
+
+app.get('/fetchKoinexRates', (req, res) => {
+	crypto.fetchKoinexRates()
+		.then((data) => {
+			//res.send(data.prices.inr);
+			res.render('koinex', {data: data.prices.inr});
+		})
+		.catch((err) => {
+			console.log('Error fetching koinex rates');
+			console.log(err);
+			res.statusCode = 500;
+			res.send();
+		})
 })
 
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
-})
+});

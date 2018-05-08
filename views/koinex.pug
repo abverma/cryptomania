@@ -1,0 +1,11 @@
+doctype html
+html(lang='en')
+	include head.pug
+	body
+		include heading.pug
+		div(class="row")
+			div(class="m-4 p-4 border rounded bg-light col col-md-3")
+				ul 
+					each val, index in data
+						li= index + ': Rs.' + val
+		include footer.pug
