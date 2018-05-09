@@ -62,13 +62,10 @@ app.get('/fetchValue', function(req, res) {
 app.get('/koinexRates', (req, res) => {
 	crypto.fetchKoinexRates()
 		.then((data) => {
-			//res.send(data.prices.inr);
 			var result = {};
 			var pricelist = data.prices.inr;
-			//console.log(pricelist);
 
 			var stats = data.stats.inr;
-			//console.log(stats);
 
 			for (var key in pricelist) {
 				var name = stats[key].currency_full_form;
@@ -80,8 +77,6 @@ app.get('/koinexRates', (req, res) => {
 					per_change: parseFloat(stats[key].per_change)
 				}
 			}
-
-			console.log(result);
 
 			res.render('koinex', {data: result});
 		})
