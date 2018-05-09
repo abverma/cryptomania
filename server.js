@@ -63,7 +63,24 @@ app.get('/koinexRates', (req, res) => {
 	crypto.fetchKoinexRates()
 		.then((data) => {
 			//res.send(data.prices.inr);
-			res.render('koinex', {data: data.prices.inr});
+			var result = {};
+			var pricelist = data.prices.inr;
+			//console.log(pricelist);
+
+			var stats = data.stats.inr;
+			//console.log(stats);
+
+			for (var key in pricelist) {
+				result[key] = {
+					name: stats[key].currency_full_form.toUpperCase(),
+					price: pricelist[key],
+					per_change: parseFloat(stats[key].per_change)
+				}
+			}
+
+			console.log(result);
+
+			res.render('koinex', {data: result});
 		})
 		.catch((err) => {
 			console.log('Error fetching koinex rates');
@@ -85,7 +102,7 @@ app.get('/cmcRates', (req, res) => {
 				rankArray.push(data.data[key].rank)
 			}
 			rankArray = rankArray.sort(function(a, b){return a - b});
-			
+
 			for (var i in rankArray) {
 				for (var key in data.data) {
 					if (data.data[key].rank == rankArray[i]) {

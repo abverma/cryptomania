@@ -13,7 +13,7 @@ html(lang='en')
 		div(class="row")
 			ul(class="mx-4 list-group col col-md-3")
 				each val, index in data
-					if parseInt(val.quotes.USD.percent_change_24h) > 0
+					if parseFloat(val.quotes.USD.percent_change_24h) > 0
 						li(class="list-group-item")= val.name + ': ' 
 							span(style="color:green; align:right")= '$' + val.quotes.USD.price 
 					else 

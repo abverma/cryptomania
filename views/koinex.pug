@@ -6,9 +6,13 @@ html(lang='en')
 		div(class="row")
 			h3(class="mx-4 p-2 col col-md-3") Koinex Rates
 		div(class="row")
-			div(class="m-4 p-4 border rounded bg-light col col-md-3")
-				ul 
-					each val, index in data
-						li= index + ': Rs.' + val
+			ul(class="mx-4 list-group col col-md-3")
+				each val, index in data
+					if parseFloat(val.per_change) > 0
+						li(class="list-group-item")= val.name + ': ' 
+							span(style="color:green; align:right")= 'Rs.' + val.price
+					else 
+						li(class="list-group-item")= val.name + ': ' 
+							span(style="color:red; align:right")= 'Rs.'  + val.price
 		include footer.pug
 		include script.pug
