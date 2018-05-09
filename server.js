@@ -71,8 +71,11 @@ app.get('/koinexRates', (req, res) => {
 			//console.log(stats);
 
 			for (var key in pricelist) {
+				var name = stats[key].currency_full_form;
+				name = name.replace(name.charAt(0), name.charAt(0).toUpperCase());
+				
 				result[key] = {
-					name: stats[key].currency_full_form.toUpperCase(),
+					name: name,
 					price: pricelist[key],
 					per_change: parseFloat(stats[key].per_change)
 				}
