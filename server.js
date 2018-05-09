@@ -73,6 +73,42 @@ app.get('/koinexRates', (req, res) => {
 		})
 })
 
+app.get('/cmcRates', (req, res) => {
+
+	var query = req.query;
+
+	crypto.fetchCMCRates(query.limit)
+		.then((data) => {
+			var result = {};
+			var rankArray = [];
+			for (var key in data.data) {
+				rankArray.push(data.data[key].rank)
+			}
+			rankArray = rankArray.sort(function(a, b){return a - b});
+			console.log(rankArray);
+			for (var i in rankArray) {
+				for (var key in data.data) {
+					if (data.data[key].rank == rankArray[i]) {
+						result[rankArray[i]] = data.data[key];
+					}
+				}
+			}
+
+			//console.log(result);
+			
+			//res.send(data);
+			res.render('cmc', {data: result});
+		})
+		.catch((err) => {
+			console.log('Error fetching cmc rates');
+			console.log(err);
+			res.statusCode = 500;
+			res.send();
+		})
+})
+
+
+
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
