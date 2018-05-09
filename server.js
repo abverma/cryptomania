@@ -85,7 +85,7 @@ app.get('/cmcRates', (req, res) => {
 				rankArray.push(data.data[key].rank)
 			}
 			rankArray = rankArray.sort(function(a, b){return a - b});
-			console.log(rankArray);
+			
 			for (var i in rankArray) {
 				for (var key in data.data) {
 					if (data.data[key].rank == rankArray[i]) {
@@ -93,10 +93,7 @@ app.get('/cmcRates', (req, res) => {
 					}
 				}
 			}
-
-			//console.log(result);
 			
-			//res.send(data);
 			res.render('cmc', {data: result});
 		})
 		.catch((err) => {
