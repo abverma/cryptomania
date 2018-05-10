@@ -1,13 +1,37 @@
 const express = require('express');
-const app = express();
-const crypto = require('./crypto');
 const url = require('url');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const flash = require('connect-flash');
+
+const passport = require('./config/passport').passport;
+const users = require('./routes/users');
+const crypto = require('./routes/crypto');
 
 const PORT = process.env.PORT || 5000;
+const app = express();
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({ resave: true,
+                  saveUninitialized: true,
+                  secret: "cats" }));
 app.set('view engine', 'pug');
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
-var getQueryParams = (url_parts) => {
+const isLoggedIn = (req, res, next) => {
+  	console.log(req.isAuthenticated());
+
+	if (req.isAuthenticated()) {
+		return next();
+	}
+	else {
+		res.redirect('/login');
+	}
+}
+
+const getQueryParams = (url_parts) => {
 	var queryObj = {};
 
 	if (!url_parts || url_parts === '') {
@@ -26,16 +50,28 @@ var getQueryParams = (url_parts) => {
 	
 }
 
-var send404 = (res) => {
+const send404 = (res) => {
 	res.writeHead(404, { 'Content-Type': 'html/plain' });
 	res.end('<html><body><h2>Page not found<h2></body></html>');
 }
 
-app.get('/', function (req, res) {
+app.post('/login', passport.authenticate('local', { 
+	failureRedirect: '/login',
+	failureFlash: true 
+}), function(req, res) {
+		 res.redirect('/');
+});
+
+app.get('/login', (req, res) => {
+	res.render('login', {message: req.flash('message')});
+});
+
+
+app.get('/', isLoggedIn, function (req, res) {
   res.render('index', { title: 'Hey', message: 'Hello there!' })
 });
 
-app.get('/fetchValue', function(req, res) {
+app.get('/fetchValue', isLoggedIn, function(req, res) {
 	console.log(req.query);
 	//var queryObj = getQueryParams(req.query);
 	//console.log(queryObj);
@@ -59,7 +95,7 @@ app.get('/fetchValue', function(req, res) {
 		});
 });
 
-app.get('/koinexRates', (req, res) => {
+app.get('/koinexRates', isLoggedIn, (req, res) => {
 	crypto.fetchKoinexRates()
 		.then((data) => {
 			var result = {};
@@ -88,7 +124,7 @@ app.get('/koinexRates', (req, res) => {
 		})
 })
 
-app.get('/cmcRates', (req, res) => {
+app.get('/cmcRates', isLoggedIn, (req, res) => {
 
 	var query = req.query;
 
@@ -119,7 +155,25 @@ app.get('/cmcRates', (req, res) => {
 		})
 })
 
+app.get('/users', isLoggedIn, (req, res) => {
+	users.getUsers({})
+		.then((data) => {
+			res.send(data);
+		})
+		.catch((err) => {
+			console.log(err);
+			res.send(err);
+		});
+});
 
+app.get('/logout', (req, res) => {
+	req.logout();
+  	res.redirect('/');
+});
+
+app.use((req, res, next) => {
+	send404(res);
+})
 
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);

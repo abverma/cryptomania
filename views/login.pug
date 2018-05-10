@@ -1,0 +1,25 @@
+doctype html
+html(lang='en')
+    include head.pug
+    body
+        nav(class="navbar navbar-expand-md navbar-dark bg-dark")
+            a(class="navbar-brand" href="/" style="color: orange") Cryptomania
+            button(class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+                span(class="navbar-toggler-icon")
+        div(class="row")
+            div(class="m-4 p-2 border rounded bg-light col col-md-3" )
+                form(action="/login" method="POST")
+                    if message.length
+                        div(class="alert alert-danger")= message
+                    div(class="form-group px-3")
+                        label(for="bittrex") Username:
+                        input(type="text" class="form-control" id="username" name="username")
+
+                    div(class="form-group px-3")
+                        label(for="binance") Password:
+                        input(type="password" class="form-control" id="password" name="password")
+                    
+                    input(type="submit" class="btn btn-primary mx-3" value="Log In")
+        include footer.pug
+        include script.pug
+
