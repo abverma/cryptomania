@@ -1,0 +1,24 @@
+doctype html
+html(lang='en')
+    include head.pug
+    body
+        include navbar.pug
+        div(class="row")
+            div(class="m-4 p-2 border rounded bg-light col col-md-3" )
+                form(action="/signup" method="POST")
+                    if message.length
+                        div(class="alert alert-danger")= message
+                    if successMessage && successMessage.length
+                        div(class="alert alert-success")= successMessage
+                    div(class="form-group px-3")
+                        label(for="bittrex") Username:
+                        input(type="text" class="form-control" id="username" name="username")
+
+                    div(class="form-group px-3")
+                        label(for="binance") Password:
+                        input(type="password" class="form-control" id="password" name="password")
+                    
+                    input(type="submit" class="btn btn-primary mx-3" value="Sign Up")
+        include footer.pug
+        include script.pug
+
