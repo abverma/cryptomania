@@ -10,27 +10,88 @@ var CMC_LIMIT = 10;
 
 var CMC_TICKER_URL = 'https://api.coinmarketcap.com/v2/ticker/';
 
+exports.fetchValue = (req, res) => {
+	console.log(req.query);
+	//var queryObj = getQueryParams(req.query);
+	//console.log(queryObj);
 
-const ask = (question) => {
-	return new Promise((resolve, reject) => {
-		var stdin = process.stdin, stdout = process.stdout;
+	var queryObj = req.query;
+	var bittrex_value = queryObj.bittrex;
+	var binance_value = queryObj.binance;
 
-		stdin.resume();
-		stdout.write(`${question}`);
-
-		stdin.once('data', function(data) {
-			//data = data.toString().trim();
-
-			if (!data || data === '') {
-			  stdout.write('Please enter some data bro... \n');
-			  ask(question, callback);
-			}
-			else {
-			  resolve(parseFloat(data));
-			}
+	calculateHoldingValue(bittrex_value, binance_value)
+		.then((result) => {
+			console.log('Total: ', result.total_value);
+  			res.render('result', {result: result});
+		})
+		.catch((err) => {
+			console.log('Error fetching holding value.');
+			console.log(err);
+  			//res.writeHead(500, { 'Content-Type': 'html/plain' });
+			//res.write(err);
+			res.statusCode = 500;
+			res.send();
 		});
-		
-	});
+}
+
+exports.getKoinexData = (req, res) => {
+	fetchKoinexRates()
+		.then((data) => {
+			var result = {};
+			var pricelist = data.prices.inr;
+
+			var stats = data.stats.inr;
+
+			for (var key in pricelist) {
+				var name = stats[key].currency_full_form;
+				name = name.replace(name.charAt(0), name.charAt(0).toUpperCase());
+				
+				result[key] = {
+					name: name,
+					price: pricelist[key],
+					per_change: parseFloat(stats[key].per_change)
+				}
+			}
+
+			res.render('koinex', {data: result});
+		})
+		.catch((err) => {
+			console.log('Error fetching koinex rates');
+			console.log(err);
+			res.statusCode = 500;
+			res.send();
+		})
+}
+
+exports.getCMCData = (req, res) => {
+
+	var query = req.query;
+
+	fetchCMCRates(query.limit)
+		.then((data) => {
+			var result = {};
+			var rankArray = [];
+			for (var key in data.data) {
+				rankArray.push(data.data[key].rank)
+			}
+			rankArray = rankArray.sort(function(a, b){return a - b});
+
+			for (var i in rankArray) {
+				for (var key in data.data) {
+					if (data.data[key].rank == rankArray[i]) {
+						result[rankArray[i]] = data.data[key];
+					}
+				}
+			}
+			
+			res.render('cmc', {data: result});
+		})
+		.catch((err) => {
+			console.log('Error fetching cmc rates');
+			console.log(err);
+			res.statusCode = 500;
+			res.send();
+		})
 }
 
 const calculateHoldingValue = (bittrex_value, binance_value) => {

@@ -1,0 +1,13 @@
+doctype html
+html(lang='en')
+    include head.pug
+    body
+        include navbar.pug
+        div(class="row")
+            div(class="m-4 p-2 col")
+                h2 #{errorCode} #{errorDesc}
+                h6 #{errorMessage}
+
+        include footer.pug
+        include script.pug
+
