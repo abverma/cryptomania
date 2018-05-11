@@ -7,6 +7,7 @@ const flash = require('connect-flash');
 const passport = require('./config/passport').passport;
 const Users = require('./models/users').Users;
 const crypto = require('./routes/crypto');
+const signupHandler = require('./routes/signup');
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -62,7 +63,7 @@ app.post('/login', passport.authenticate('local', {
 });
 
 app.get('/login', (req, res) => {
-	res.render('login', {message: req.flash('message')});
+	res.render('login', {message: req.flash('message'), successMessage: req.flash('successMessage')});
 });
 
 
@@ -71,6 +72,15 @@ app.get('/', isLoggedIn, function (req, res) {
 	
 	console.log('User ' + user._id + ' logged in.');
 	res.render('index');
+});
+
+app.post('/signup', (req, res) => {
+	console.log('Handling signup');
+	signupHandler.signup(req, res);
+});
+
+app.get('/signup', (req, res) => {
+	res.render('signup', {message: req.flash('message')});
 });
 
 app.get('/fetchValue', isLoggedIn, function(req, res) {
