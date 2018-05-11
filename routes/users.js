@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const HOST = 'ds119150.mlab.com';
-const PORT = process.env.PORT || 19150;
+const PORT = 19150;
 const SCHEMA = 'cryptomania';
 const user = 'abverma';
 const pwd = 'matlabkya';
