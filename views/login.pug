@@ -8,6 +8,8 @@ html(lang='en')
                 form(action="/login" method="POST")
                     if message.length
                         div(class="alert alert-danger")= message
+                    if successMessage && successMessage.length
+                        div(class="alert alert-success")= successMessage
                     div(class="form-group px-3")
                         label(for="bittrex") Username:
                         input(type="text" class="form-control" id="username" name="username")

@@ -4,8 +4,26 @@ html(lang='en')
 	body
 		include heading.pug
 		div(class="row")
-			div(class="m-4 p-2 col col-md-3" )
-				h3 Welcome #{user.username} 
+			div(class="mt-2 p-2 col col-md-5" )
+				h3(class="text-center") #{user.username} 
 					i(class="material-icons") edit
+
+		div(class="row")
+			div(class="mx-2 p-2 col col-md-5" )
+				table(class="table" id="coinTable")
+					thead(class="thead-dark")
+						tr(class="")
+							th Rs. 0
+							th
+							th(class="text-right") 
+								a(class="btn p-0 material-icons title='Add Coin'" onclick="addCoin()") add
+					thead(class="thead-light")
+						tr(class="")
+							th(scope="col") Coin
+							th(scope="col") Holdings
+							th(scope="col") Price
+					tbody(id="tableBody")
+
 		include footer.pug
 		include script.pug
+		<script src="./handlers/profileHandler.js"></script>

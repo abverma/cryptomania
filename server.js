@@ -24,6 +24,8 @@ app.set('view engine', 'pug');
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(express.static('views'));
+
 
 const isLoggedIn = (req, res, next) => {
 

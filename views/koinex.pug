@@ -7,12 +7,15 @@ html(lang='en' style="100%")
 			h3(class="mx-4 p-2 col col-md-3") Koinex Rates
 		div(class="row")
 			ul(class="mx-4 list-group col col-md-3")
+				- var fontColor
 				each val, index in data
 					if parseFloat(val.per_change) > 0
-						li(class="list-group-item")= val.name + ': ' 
-							span(style="color:green; align:right")= 'Rs.' + val.price
+						- fontColor = 'green'
 					else 
-						li(class="list-group-item")= val.name + ': ' 
-							span(style="color:red; align:right")= 'Rs.'  + val.price
+						- fontColor = 'red'
+					li(class="list-group-item pt-3 pb-2" style="font-size: 18px; font-weight: bold;")= val.name + ': ' 
+						span(style="color:" + fontColor + "; align:right; font-weight: normal;")= 'Rs.' + val.price
+						a(class="pt-0 pb-1 px-0 btn material-icons float-right" title="Add to portfolio" style="font-size: 36px; font-weight: normal;") add
+
 		include footer.pug
 		include script.pug
