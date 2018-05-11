@@ -5,7 +5,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 
 const passport = require('./config/passport').passport;
-const users = require('./routes/users');
+const Users = require('./routes/users').Users;
 const crypto = require('./routes/crypto');
 
 const PORT = process.env.PORT || 5000;
@@ -155,15 +155,21 @@ app.get('/cmcRates', isLoggedIn, (req, res) => {
 		})
 })
 
-app.get('/users', isLoggedIn, (req, res) => {
-	users.getUsers({})
-		.then((data) => {
-			res.send(data);
-		})
-		.catch((err) => {
-			console.log(err);
+app.get('/users',  (req, res) => {
+	Users.find({username: "abhishek"}, (err, data) => {
+		console.log('Finding user');
+		if (err){
+			console.log('Error: ', err);
 			res.send(err);
-		});
+		}
+		else {
+			console.log('Data: ', data);
+			res.send(data);
+		}
+	})
+	.catch((err) => {
+		console.log(err);
+	})
 });
 
 app.get('/logout', (req, res) => {

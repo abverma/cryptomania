@@ -17,14 +17,16 @@ passport.use(new LocalStrategy({
 		passReqToCallback : true 
 	},
 	function(req, username, password, done) {
-  		
-		Users.findOne({ user_name: username, password: password }, function(err, user) {
+  		console.log(username);
+  		console.log(password);
+		Users.findOne({ username: username, password: password }, function(err, user) {
 			if (err) { 
 				console.log('error');
 
 				return done(err); 
 			}
 			if (!user) {
+				console.log(user);
 				console.log('incorrect username');
 				return done(null, false, req.flash('message', 'Incorrect username or password'));
 			}

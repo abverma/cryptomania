@@ -2,11 +2,13 @@ const MongoClient = require('mongodb').MongoClient;
 
 const db = null;
 
-const HOST = 'localhost';
-const PORT = process.env.PORT || 27017;
-const SCHEMA = 'crypto';
+const HOST = ds119150.mlab.com;
+const PORT = process.env.PORT || 19150;
+const SCHEMA = 'cryptomania';
+const user = 'abverma';
+const pwd = 'matlabkya';
 
-var url = `mongodb://${HOST}:${PORT}/${SCHEMA}`; 
+var url = `mongodb://${user}:${pwd}${HOST}:${PORT}/${SCHEMA}`; 
 
 console.log(url);
 const connect = (cb) => {
