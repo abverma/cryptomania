@@ -5,7 +5,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 
 const passport = require('./config/passport').passport;
-const Users = require('./routes/users').Users;
+const Users = require('./models/users').Users;
 const crypto = require('./routes/crypto');
 
 const PORT = process.env.PORT || 5000;
@@ -21,7 +21,6 @@ app.use(passport.session());
 app.use(flash());
 
 const isLoggedIn = (req, res, next) => {
-  	console.log(req.isAuthenticated());
 
 	if (req.isAuthenticated()) {
 		return next();
@@ -68,7 +67,10 @@ app.get('/login', (req, res) => {
 
 
 app.get('/', isLoggedIn, function (req, res) {
-  res.render('index', { title: 'Hey', message: 'Hello there!' })
+	var user = req.user;
+	
+	console.log('User ' + user._id + ' logged in.');
+	res.render('index');
 });
 
 app.get('/fetchValue', isLoggedIn, function(req, res) {
@@ -173,6 +175,7 @@ app.get('/users',  (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
+	console.log(req.user._id + ' logging out');
 	req.logout();
   	res.redirect('/');
 });

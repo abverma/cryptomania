@@ -1,37 +1,34 @@
-const Users = require('../routes/users').Users;
+const Users = require('../models/users').Users;
 const passport = require('passport');
 
 const LocalStrategy  = require('passport-local').Strategy;
 
 passport.serializeUser(function(user, cb) {
-	cb(null, user.id);
+	//console.log('Serializing ' + user);
+	cb(null, user._id);
 });
 
 passport.deserializeUser(function(id, cb) {
-  Users.findById(id, function(err, user) {
-    cb(err, user);
-  });
+	//console.log('Deserializing ' + id);
+	Users.findById(id, function(err, user) {
+		cb(err, user);
+	});
 });
 		
 passport.use(new LocalStrategy({
 		passReqToCallback : true 
 	},
 	function(req, username, password, done) {
-  		console.log(username);
-  		console.log(password);
 		Users.findOne({ username: username, password: password }, function(err, user) {
 			if (err) { 
 				console.log('error');
-
 				return done(err); 
 			}
 			if (!user) {
-				console.log(user);
 				console.log('incorrect username');
 				return done(null, false, req.flash('message', 'Incorrect username or password'));
 			}
 			
-			console.log('success');
 		  	return done(null, user);
 		});
 	}
